@@ -1,0 +1,27 @@
+{
+  "name": "rbren",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [
+    "rules",
+    "engine",
+    "ORM",
+    "sql",
+    "sqlite",
+    "business rule"
+  ],
+  "author": "Oosuke Ren",
+  "license": "ISC",
+  "description": "Record Based Rules ENgine for JavaScript, designed to integrate with your backend, glue an ORM (with any SQL based DB) to it, and have your API endpoints use everything seamlessly.",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  }
+}
