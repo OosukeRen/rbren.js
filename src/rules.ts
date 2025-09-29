@@ -6,10 +6,11 @@ declare global {
   class Rule {
     name: string;
     table: string;
-    condition: RuleFunction;
+    condition: RuleCondition;
     priority: number;
     when: When;
     description: string;
+    execute: RuleExecution;
 
     constructor(constr: RuleConstructor);
   }
@@ -24,12 +25,14 @@ declare type When = {
     DELETE?: boolean;
 };
 
-declare type RuleFunction = (record: any, previous: any) => Promise<boolean>;
+declare type RuleExecution = (record: any, previous: any) => Promise<void>;
+declare type RuleCondition = (record: any, previous: any) => Promise<boolean>;
+
 
 declare type RuleConstructor = {
     name: string;
     table: string;
-    condition: RuleFunction;
+    condition: RuleCondition;
     when: When;
 }
 
@@ -63,9 +66,26 @@ let log = globalThis.Log || console.log;
 class Rule {
     name: string;
     table: string;
-    condition: RuleFunction;
+    condition: RuleCondition;
     priority: number;
-    #execute: RuleFunction;
+    #execute: RuleExecution;
+    #condition: RuleCondition;
+    #memoizedExecute = async function (record: any, previous: any) {
+                            try {
+                                await this.#execute(record, previous);
+                            } catch(e) {
+                                log(e);
+                            }
+                        };
+
+    #memoizedCondition = async function (record: any, previous: any) {
+                    try {
+                        return await this.#condition(record, previous);
+                    } catch(e) {
+                        log(e);
+                        return false;
+                    }
+                };
     when: When;
     description: string;
 
@@ -90,26 +110,31 @@ class Rule {
         }
 
         this.when = when;
-        this.condition = condition;
         this.table = table;
+
+        Object.defineProperty(this, "condition", {
+            set(_condition) {
+                this.#condition = _condition;
+            },
+            get() {
+                return this.#memoizedCondition;
+            }
+        })
+
+        this.#condition = condition;
 
         Object.defineProperty(this, "execute", {
             set(_execute) {
                 this.#execute = _execute;
             },
             get() {
-                return async function (record: any, previous: any) {
-                    try {
-                        await this.#execute(record, previous);
-                    } catch(e) {
-                        log(e);
-                    }
-                }
+                return this.#memoizedExecute;
             }
         })
+
+        // safe default so calling execute before assignment doesn’t crash
+        this.#execute = async (current, previous) => {};
     }
-
-
 }
 
 // Install globally at runtime
