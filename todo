@@ -1,0 +1,16 @@
+[ ] CRON Jobs
+[ ] Events
+[ ] ORM Part
+[ ] Glue ORM + Rules
+    [ ] Write a script that automatically updates your imports for all rules, 
+        inside of a file, to then reimport, and reorder, inside of the ORM functionalities as middlewares
+[ ] Integrate with existing or make own routing/API endpoint framework.
+[ ] Improve error logging.
+
+Longer Term
+
+[ ] Write Table Syntax Language
+    [ ] Think up the syntax
+    [ ] Write a parser that creates a javascript Class instance, connected to db connection, for every table file
+[ ] Improve the intuitiveness of the ORM Class instances
+[ ] Write VSCode extension that searches amongst the Rules, events and records like a database
