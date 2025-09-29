@@ -58,6 +58,7 @@ const RuleErrorWrapper = (_rule: Rule) =>  {
     return `\tRule Name: ${_rule.name}\n`;
 }
 
+let log = globalThis.Log || console.log;
 
 class Rule {
     name: string;
@@ -101,7 +102,7 @@ class Rule {
                     try {
                         await this.#execute(record, previous);
                     } catch(e) {
-                        (Log || console.log)(e);
+                        log(e);
                     }
                 }
             }
