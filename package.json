@@ -21,6 +21,8 @@
   "license": "ISC",
   "description": "Record Based Rules ENgine for JavaScript, designed to integrate with your backend, glue an ORM (with any SQL based DB) to it, and have your API endpoints use everything seamlessly.",
   "devDependencies": {
+    "pg": "^8.16.3",
+    "sqlite3": "^5.1.7",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   }

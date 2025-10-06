@@ -1,4 +1,4 @@
-import errors from "./consts/ERRORS";
+import errors from "../consts/ERRORS";
 
 export {}; // make this a module
 
@@ -11,6 +11,7 @@ declare global {
     when: When;
     description: string;
     execute: RuleExecution;
+    active: boolean;
 
     constructor(constr: RuleConstructor);
   }
@@ -34,6 +35,7 @@ declare type RuleConstructor = {
     table: string;
     condition: RuleCondition;
     when: When;
+    active?: boolean;
 }
 
 class BaseRuleError extends Error {
@@ -70,6 +72,8 @@ class Rule {
     priority: number;
     #execute: RuleExecution;
     #condition: RuleCondition;
+    active: boolean;
+
     #memoizedExecute = async function (record: any, previous: any) {
                             try {
                                 await this.#execute(record, previous);
@@ -90,7 +94,7 @@ class Rule {
     description: string;
 
     constructor(constr: RuleConstructor) {
-        let {name, table, condition, when} = constr;
+        let {name, table, condition, when, active = true} = constr;
         if(!name) {
             RuleError(this, errors.RULES.NAME.MISSING);
         }
@@ -111,7 +115,8 @@ class Rule {
 
         this.when = when;
         this.table = table;
-
+        this.active = active;
+        
         Object.defineProperty(this, "condition", {
             set(_condition) {
                 this.#condition = _condition;
