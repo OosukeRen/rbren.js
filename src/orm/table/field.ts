@@ -1,6 +1,6 @@
 //Field.ts
 
-import { Table } from "./baseTableClass";
+import { Table } from "./table";
 
 type referenceOptionalFields = {
     /** Action to take when referenced row is deleted */
@@ -12,27 +12,18 @@ type referenceOptionalFields = {
 }
 
 /**
- * Creates a reference to another table for foreign key relationships
- * @template table - The referenced table type
- * @param {table} table - The referenced table instance
- * @param {keyof table["fields"]} field - The field in the referenced table
- * @param {referenceOptionalFields} referenceOptionalFields - Optional reference configuration
- * @returns {object} The reference definition object
- */
-export function TableReference <table extends Table<any>> (table: table, field: keyof table["fields"],
-    referenceOptionalFields: referenceOptionalFields
-) {
-    return {
-        table,
-        field,
-        ...referenceOptionalFields
-    }
-}
-
-/**
  * Base field definition containing common SQL column properties.
  */
 export type BaseFieldDefinition = {
+    /**
+     * Field Name for inside the CMS platform, if necessary 
+     */
+    label: string;
+
+    /**
+     * Internal field name for the database
+     */
+    name: string;
     /**
      * Marks the field as a primary key.
      */
